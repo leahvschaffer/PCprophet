@@ -185,9 +185,9 @@ In the output folder the following text files are present:
 
 In case differential analysis was performed two additional text files and one folder are going to be present.
 
-- __DifferentialComplexReport.txt__: Complex-level differential analysis, where complexes are scored based on the Baysean factors for the individual proteins.
+- __DifferentialComplexReport.txt__: Complex-level differential analysis, where complexes are scored based on the Bayses factors for the individual proteins.
 
-- __DifferentialProteinReport.txt__: Protein-level differential analysis, where the Baysean probability difference between each condition is reported.
+- __DifferentialProteinReport.txt__: Protein-level differential analysis, where the Baysian probability difference between each condition is reported.
 
 
 - __Differential__: Differential delta plot of intensity between every condition and control. A flat line represents no difference between control and condition. A positive peak represents an increase in the control; while a negative peak represents an increase in the condition (right Y axis).
