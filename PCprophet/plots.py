@@ -5,6 +5,7 @@ import pandas as pd
 import numpy as np
 
 import PCprophet.stats_ as st
+import PCprophet.io_ as io
 
 
 def smart_makefold(path, folder):
@@ -122,7 +123,7 @@ def plot_repl_prof(filt, fold, cols):
     return True
 
 
-def plot_fdr(tmp_fold, out_fold, target_fdr=0.5):
+def plot_fdr(tmp_fold, ids, out_fold, target_fdr=0.5):
     """
     plot fdr
     fdr is an array of array
@@ -134,7 +135,16 @@ def plot_fdr(tmp_fold, out_fold, target_fdr=0.5):
     csfont = {"fontname": "sans-serif"}
     fig, ax = plt.subplots(figsize=(6, 6), facecolor="white")
     ax.grid(color="grey", linestyle="--", linewidth=0.25, alpha=0.5)
-    for sample in [x[0] for x in os.walk(tmp_fold) if x[0] is not tmp_fold]:
+
+    dir_ = []
+    dir_ = [x[0] for x in os.walk(tmp_fold) if x[0] is not tmp_fold]
+    exp_info = io.read_sample_ids(ids)
+    strip = lambda x: os.path.splitext(os.path.basename(x))[0]
+    exp_info = {strip(k): v for k, v in exp_info.items()}
+    for sample in dir_:
+        base = os.path.basename(os.path.normpath(sample))
+        if not exp_info.get(base, None):
+            continue
         fdrfile = os.path.join(sample, "fdr.txt")
         fdrfile = pd.read_csv(fdrfile, sep="\t", index_col=False)
         ids = os.path.basename(os.path.normpath(sample))
@@ -236,7 +246,7 @@ def plot_recall(out_fold):
     return True
 
 
-def runner(tmp_fold, out_fold, target_fdr, sid):
+def runner(tmp_fold, first_tmp_fold, out_fold, target_fdr, sid):
     """
     performs all plots using matplotlib
     plots
@@ -249,12 +259,12 @@ def runner(tmp_fold, out_fold, target_fdr, sid):
     if not os.path.isdir(outf):
         os.makedirs(outf)
     try:
-        plot_fdr(tmp_fold, out_fold, target_fdr)
+        plot_fdr(tmp_fold, sid, out_fold, target_fdr)
     except ValueError:
         pass
     try:
         plot_recall(out_fold)
     except Exception as e:
         pass
-    comb = os.path.join(tmp_fold, "combined.txt")
+    comb = os.path.join(first_tmp_fold, "combined.txt")
     plot_positive(comb, sid, pl_dir=outf)

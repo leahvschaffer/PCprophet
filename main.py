@@ -233,15 +233,17 @@ def main():
         config["POSTPROCESS"]["fdr"],
         config["POSTPROCESS"]["collapse_mode"],
     )
-    combined_file = os.path.join(config["GLOBAL"]["temp"], "combined.txt")
+    first_tmp_folder = io.file2folder(files[0], config["GLOBAL"]["temp"])
+    combined_file = os.path.join(first_tmp_folder, "combined.txt")
     differential.runner(
         combined_file,
         config["GLOBAL"]["sid"],
         config["GLOBAL"]["output"],
-        config["GLOBAL"]["temp"],
+        first_tmp_folder,
     )
     plots.runner(
         config["GLOBAL"]["temp"],
+        first_tmp_folder,
         config["GLOBAL"]["output"],
         config["POSTPROCESS"]["fdr"],
         config["GLOBAL"]["sid"],

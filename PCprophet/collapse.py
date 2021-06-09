@@ -477,6 +477,7 @@ def runner(tmp_, ids, cal, mw, fdr, mode):
         if not exp_info.get(base, None):
             continue
         print(base, exp_info[base])
+        last = base
         mp_feat_norm = os.path.join(smpl, "mp_feat_norm.txt")
         pred_out = os.path.join(smpl, "rf.txt")
         ann = os.path.join(smpl, "cmplx_combined.txt")
@@ -505,6 +506,9 @@ def runner(tmp_, ids, cal, mw, fdr, mode):
     allexps.multi_collapse()
     allexps.combine_all()
     final = allexps.protein_centric_combine()
-    outname = os.path.join(tmp_, "combined.txt")
+
+    #save in first folder (prevent conflicts if running multiple instances)
+    tmp_folder = io.file2folder(list(exp_info.keys())[0], tmp_)
+    outname = os.path.join(tmp_folder, "combined.txt")
     final.to_csv(outname, sep="\t", index=False)
     return True
